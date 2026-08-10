@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Risk-governed, deterministic paper-trading replay demo">
+    <title>RiskLedger · Bounded paper-trading replay</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <script src="/assets/app.js" defer></script>
+  </head>
+  <body>
+    <div class="safety-strip" role="note">
+      <span>Paper-only simulation</span>
+      <span>Simulated fills</span>
+      <span>Not financial advice</span>
+      <span>No profit claim</span>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">RL</span>
+        <span><strong>RiskLedger</strong><small>Bounded replay lab</small></span>
+      </a>
+      <div class="mode-chip"><span class="pulse" aria-hidden="true"></span> Local · paper only</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Deterministic decision support</p>
+          <h1>A trade proposal is not permission to trade.</h1>
+          <p class="hero-copy">
+            Replay sealed market history, inspect cited signals, watch an independent risk
+            engine decide, and keep execution parked until a human approves the exact digest.
+          </p>
+        </div>
+        <div class="loop-map" aria-label="Bounded workflow summary">
+          <span>Replay</span><b>→</b><span>Analyze</span><b>→</b><span>Risk</span><b>→</b>
+          <span class="stop">Human stop</span><b>→</b><span>Paper fill</span><b>→</b><span>Reconcile</span>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="RiskLedger demo workspace">
+        <aside class="control-panel card">
+          <div class="section-heading">
+            <div><p class="eyebrow">01 · Configure</p><h2>Replay session</h2></div>
+          </div>
+          <label for="scenario">Bundled scenario</label>
+          <select id="scenario" aria-describedby="scenario-help"></select>
+          <p id="scenario-help" class="field-help">Only sealed, local datasets are available.</p>
+          <button id="start-session" class="button primary" type="button">Start bounded replay</button>
+
+          <dl class="policy-list">
+            <div><dt>Position</dt><dd>≤ 25 shares</dd></div>
+            <div><dt>Order notional</dt><dd>≤ $2,500</dd></div>
+            <div><dt>Drawdown</dt><dd>≤ 10%</dd></div>
+            <div><dt>Order count</dt><dd>≤ 3</dd></div>
+            <div><dt>Price age</dt><dd>≤ 5 minutes</dd></div>
+            <div><dt>Leverage</dt><dd>Never</dd></div>
+          </dl>
+
+          <div id="error" class="error-box" role="alert" hidden></div>
+        </aside>
+
+        <div class="session-panel">
+          <section class="card status-card" aria-labelledby="session-title">
+            <div class="section-heading">
+              <div><p class="eyebrow">02 · Observe</p><h2 id="session-title">No session yet</h2></div>
+              <span id="status" class="status neutral">READY</span>
+            </div>
+            <p id="session-summary" class="muted">Choose a replay. Nothing executes on page load.</p>
+            <div class="metrics" aria-label="Portfolio metrics">
+              <div><span>Cash</span><strong id="cash">—</strong></div>
+              <div><span>Equity</span><strong id="equity">—</strong></div>
+              <div><span>Drawdown</span><strong id="drawdown">—</strong></div>
+              <div><span>Orders</span><strong id="order-count">—</strong></div>
+            </div>
+            <div class="digest-row"><span>Dataset</span><code id="dataset-digest">—</code></div>
+          </section>
+
+          <div class="two-column">
+            <section class="card" aria-labelledby="evidence-title">
+              <div class="section-heading compact">
+                <div><p class="eyebrow">03 · Verify</p><h2 id="evidence-title">Proposal evidence</h2></div>
+              </div>
+              <div id="proposal-empty" class="empty-state">Cited signals will appear here.</div>
+              <div id="proposal-content" hidden>
+                <div class="proposal-line">
+                  <strong id="proposal-action"></strong><span id="proposal-notional"></span>
+                </div>
+                <p id="proposal-rationale" class="muted"></p>
+                <ul id="signals" class="signal-list"></ul>
+              </div>
+            </section>
+
+            <section class="card" aria-labelledby="risk-title">
+              <div class="section-heading compact">
+                <div><p class="eyebrow">04 · Gate</p><h2 id="risk-title">Independent risk</h2></div>
+              </div>
+              <div id="risk-empty" class="empty-state">The deterministic verdict will appear here.</div>
+              <div id="risk-content" hidden>
+                <div id="risk-verdict" class="verdict"></div>
+                <ul id="violations" class="violation-list"></ul>
+                <div class="digest-row"><span>Policy</span><code id="policy-digest">—</code></div>
+              </div>
+            </section>
+          </div>
+
+          <section id="approval-card" class="card approval-card" aria-labelledby="approval-title" hidden>
+            <div class="section-heading">
+              <div><p class="eyebrow">05 · Human authority</p><h2 id="approval-title">Approve exact artifacts</h2></div>
+              <span class="status awaiting">PARKED</span>
+            </div>
+            <p class="muted">
+              Approval is one-use, expires, and binds the proposal, dataset, policy, and risk verdict.
+            </p>
+            <div class="digest-row"><span>Approval</span><code id="approval-digest">—</code></div>
+            <div class="approval-form">
+              <div><label for="actor">Human reviewer</label><input id="actor" value="recruiter-demo" maxlength="80"></div>
+              <div><label for="reject-reason">Rejection reason</label><input id="reject-reason" value="Evidence is not persuasive enough." maxlength="300"></div>
+            </div>
+            <div class="button-row">
+              <button id="approve" class="button approve" type="button">Approve paper execution</button>
+              <button id="reject" class="button reject" type="button">Reject proposal</button>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="fill-title">
+            <div class="section-heading compact">
+              <div><p class="eyebrow">06 · Reconcile</p><h2 id="fill-title">Simulated fills & ledger</h2></div>
+              <span id="reconciliation" class="status neutral">NO FILL</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Order</th><th>Side</th><th>Qty</th><th>Price</th><th>Fee</th><th>Venue</th></tr></thead>
+                <tbody id="fills"><tr><td colspan="6" class="empty-cell">No simulated fills.</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="timeline-title">
+            <div class="section-heading compact">
+              <div><p class="eyebrow">07 · Audit</p><h2 id="timeline-title">Immutable timeline</h2></div>
+              <span id="event-count" class="count-chip">0 events</span>
+            </div>
+            <ol id="timeline" class="timeline"><li class="empty-state">Start a replay to build the audit chain.</li></ol>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer>Built for transparent systems interviews · Zero broker network calls · Local state resets on restart</footer>
+  </body>
+</html>

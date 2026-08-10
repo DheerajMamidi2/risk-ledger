@@ -1,0 +1,51 @@
+{
+  "dataset_version": "risk-ledger-replay-v1",
+  "scenarios": [
+    {
+      "scenario_id": "steady-rise",
+      "name": "Steady rise / approved path",
+      "description": "A rising synthetic price series with volume confirmation and a fresh decision price.",
+      "symbol": "ACME",
+      "decision_time": "2026-01-05T15:30:00Z",
+      "initial_cash": "10000.00",
+      "analysis_bars": [
+        {"bar_id": "ACME-20260105-1510", "timestamp": "2026-01-05T15:10:00Z", "open": "99.50", "high": "100.50", "low": "99.25", "close": "100.00", "volume": 1000},
+        {"bar_id": "ACME-20260105-1515", "timestamp": "2026-01-05T15:15:00Z", "open": "100.00", "high": "101.50", "low": "99.90", "close": "101.00", "volume": 1050},
+        {"bar_id": "ACME-20260105-1520", "timestamp": "2026-01-05T15:20:00Z", "open": "101.00", "high": "102.60", "low": "100.80", "close": "102.00", "volume": 1125},
+        {"bar_id": "ACME-20260105-1525", "timestamp": "2026-01-05T15:25:00Z", "open": "102.00", "high": "104.50", "low": "101.80", "close": "104.00", "volume": 1300},
+        {"bar_id": "ACME-20260105-1530", "timestamp": "2026-01-05T15:30:00Z", "open": "104.00", "high": "106.50", "low": "103.80", "close": "106.00", "volume": 1500}
+      ],
+      "execution_bar": {"bar_id": "ACME-20260105-1535", "timestamp": "2026-01-05T15:35:00Z", "open": "106.50", "high": "107.40", "low": "106.20", "close": "107.00", "volume": 1420}
+    },
+    {
+      "scenario_id": "stale-price-veto",
+      "name": "Stale price / deterministic veto",
+      "description": "The signal is positive, but the sealed price is too old at the decision boundary.",
+      "symbol": "ACME",
+      "decision_time": "2026-01-05T16:00:00Z",
+      "initial_cash": "10000.00",
+      "analysis_bars": [
+        {"bar_id": "STALE-20260105-1510", "timestamp": "2026-01-05T15:10:00Z", "open": "99.50", "high": "100.50", "low": "99.25", "close": "100.00", "volume": 1000},
+        {"bar_id": "STALE-20260105-1515", "timestamp": "2026-01-05T15:15:00Z", "open": "100.00", "high": "101.50", "low": "99.90", "close": "101.00", "volume": 1050},
+        {"bar_id": "STALE-20260105-1520", "timestamp": "2026-01-05T15:20:00Z", "open": "101.00", "high": "102.60", "low": "100.80", "close": "102.00", "volume": 1125},
+        {"bar_id": "STALE-20260105-1525", "timestamp": "2026-01-05T15:25:00Z", "open": "102.00", "high": "104.50", "low": "101.80", "close": "104.00", "volume": 1300},
+        {"bar_id": "STALE-20260105-1530", "timestamp": "2026-01-05T15:30:00Z", "open": "104.00", "high": "106.50", "low": "103.80", "close": "106.00", "volume": 1500}
+      ],
+      "execution_bar": {"bar_id": "STALE-20260105-1605", "timestamp": "2026-01-05T16:05:00Z", "open": "106.50", "high": "107.40", "low": "106.20", "close": "107.00", "volume": 1420}
+    },
+    {
+      "scenario_id": "insufficient-evidence",
+      "name": "Short replay / insufficient evidence",
+      "description": "Only three flat observations are available, so strategy analysis must stop safely.",
+      "symbol": "ACME",
+      "decision_time": "2026-01-06T15:20:00Z",
+      "initial_cash": "10000.00",
+      "analysis_bars": [
+        {"bar_id": "SHORT-20260106-1510", "timestamp": "2026-01-06T15:10:00Z", "open": "100.00", "high": "100.20", "low": "99.80", "close": "100.00", "volume": 1000},
+        {"bar_id": "SHORT-20260106-1515", "timestamp": "2026-01-06T15:15:00Z", "open": "100.00", "high": "100.20", "low": "99.80", "close": "100.00", "volume": 1000},
+        {"bar_id": "SHORT-20260106-1520", "timestamp": "2026-01-06T15:20:00Z", "open": "100.00", "high": "100.20", "low": "99.80", "close": "100.00", "volume": 1000}
+      ],
+      "execution_bar": {"bar_id": "SHORT-20260106-1525", "timestamp": "2026-01-06T15:25:00Z", "open": "100.00", "high": "100.20", "low": "99.80", "close": "100.00", "volume": 1000}
+    }
+  ]
+}
