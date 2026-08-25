@@ -144,6 +144,13 @@
               <div><p class="eyebrow">07 · Audit</p><h2 id="timeline-title">Immutable timeline</h2></div>
               <span id="event-count" class="count-chip">0 events</span>
             </div>
+            <div class="timeline-lens" role="group" aria-label="Audit timeline lens">
+              <button class="timeline-filter is-active" type="button" data-timeline-filter="all" aria-pressed="true">All events</button>
+              <button class="timeline-filter" type="button" data-timeline-filter="analysis" aria-pressed="false">Analysis</button>
+              <button class="timeline-filter" type="button" data-timeline-filter="authority" aria-pressed="false">Risk + authority</button>
+              <button class="timeline-filter" type="button" data-timeline-filter="execution" aria-pressed="false">Execution</button>
+            </div>
+            <p id="timeline-filter-status" class="sr-only" aria-live="polite">Showing all audit events.</p>
             <ol id="timeline" class="timeline"><li class="empty-state">Start a replay to build the audit chain.</li></ol>
           </section>
         </div>

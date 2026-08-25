@@ -19,6 +19,7 @@
 body { margin: 0; background: radial-gradient(circle at 70% -10%, #143328 0, var(--canvas) 34rem); color: var(--ink); min-width: 300px; }
 button, input, select { font: inherit; }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 .safety-strip { display: flex; justify-content: center; gap: 1.8rem; padding: .55rem 1rem; background: #d6ffe8; color: #092419; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .site-header { max-width: 1500px; margin: auto; padding: 1.2rem 3vw; display: flex; justify-content: space-between; align-items: center; }
@@ -80,15 +81,20 @@ select, input { width: 100%; border: 1px solid #315044; border-radius: .55rem; b
 .approval-card { border-color: #6f5729; background: linear-gradient(145deg, #28220f, #15180f); }
 .approval-form { display: grid; grid-template-columns: 1fr 1.4fr; gap: .75rem; }.button-row { display: flex; gap: .6rem; margin-top: 1rem; }
 .table-wrap { overflow-x: auto; } table { width: 100%; border-collapse: collapse; font-size: .72rem; } th { color: var(--muted); font-weight: 650; text-align: left; } th, td { padding: .68rem .55rem; border-top: 1px solid var(--line); white-space: nowrap; }
+.timeline-lens { display: flex; flex-wrap: wrap; gap: .42rem; margin: -.2rem 0 1rem; }
+.timeline-filter { border: 1px solid var(--line); border-radius: .42rem; background: #091611; color: var(--muted); padding: .46rem .6rem; min-height: 2.25rem; cursor: pointer; font-size: .68rem; font-weight: 800; transition: background .16s ease, border-color .16s ease, color .16s ease, transform .16s ease; }
+.timeline-filter:hover { border-color: #3f6c5b; color: var(--ink); transform: translateY(-1px); }
+.timeline-filter.is-active { border-color: var(--mint); background: var(--mint); color: #062116; box-shadow: 0 0 0 1px rgb(105 240 174 / 22%); }
 .timeline { list-style: none; margin: 0; padding: 0; display: grid; }
 .timeline li { display: grid; grid-template-columns: 2rem minmax(150px, .6fr) 1fr auto; gap: .6rem; align-items: center; border-top: 1px solid var(--line); padding: .7rem 0; font-size: .72rem; }
 .timeline .sequence { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: #193127; color: var(--mint); font-size: .6rem; font-weight: 800; }
 .timeline .event-type { font-weight: 750; }.timeline .reason { color: var(--muted); }.timeline code { max-width: 8rem; overflow: hidden; text-overflow: ellipsis; color: #709a88; }
+.timeline .timeline-empty { display: block; color: var(--muted); }
 footer { text-align: center; color: #6f8179; font-size: .68rem; padding: 2rem 1rem; }
 
 @media (max-width: 920px) {
   .hero { grid-template-columns: 1fr; }.loop-map { justify-content: flex-start; }.workspace { grid-template-columns: minmax(0, 1fr); }.control-panel { position: static; }.two-column { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
-  .safety-strip { gap: .5rem; flex-wrap: wrap; }.site-header { padding: 1rem; }.mode-chip { display: none; } main { padding: 0 1rem 3rem; }.hero { padding-top: 2rem; }.metrics { grid-template-columns: 1fr 1fr; }.approval-form { grid-template-columns: 1fr; }.button-row { flex-direction: column; }.timeline li { grid-template-columns: 2rem 1fr; }.timeline .reason, .timeline code { grid-column: 2; }.loop-map b { display: none; }
+  .safety-strip { gap: .5rem; flex-wrap: wrap; }.site-header { padding: 1rem; }.mode-chip { display: none; } main { padding: 0 1rem 3rem; }.hero { padding-top: 2rem; }.metrics { grid-template-columns: 1fr 1fr; }.approval-form { grid-template-columns: 1fr; }.button-row { flex-direction: column; }.timeline-lens { display: grid; grid-template-columns: 1fr 1fr; }.timeline-filter { width: 100%; }.timeline li { grid-template-columns: 2rem 1fr; }.timeline .reason, .timeline code { grid-column: 2; }.loop-map b { display: none; }
 }

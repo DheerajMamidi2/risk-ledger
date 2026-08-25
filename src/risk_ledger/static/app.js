@@ -1,8 +1,41 @@
 "use strict";
 
-const state = { session: null };
+const state = { session: null, timelineFilter: "all" };
 const byId = (id) => document.getElementById(id);
 const mutationHeaders = { "Content-Type": "application/json", "X-RiskLedger-Client": "local-web" };
+const auditLenses = {
+  all: { label: "all", eventTypes: null },
+  analysis: {
+    label: "analysis",
+    eventTypes: new Set([
+      "SESSION_CREATED",
+      "REPLAY_LOADED",
+      "ANALYSIS_COMPLETED",
+      "PROPOSAL_CREATED",
+      "INSUFFICIENT_EVIDENCE",
+    ]),
+  },
+  authority: {
+    label: "risk and authority",
+    eventTypes: new Set([
+      "RISK_CHECK_PASSED",
+      "RISK_VETOED",
+      "APPROVAL_GRANTED",
+      "APPROVAL_REJECTED",
+      "APPROVAL_EXPIRED",
+      "LOOP_HALTED",
+    ]),
+  },
+  execution: {
+    label: "execution and reconciliation",
+    eventTypes: new Set([
+      "PAPER_ORDER_SUBMITTED",
+      "PAPER_FILL_RECORDED",
+      "LEDGER_RECONCILED",
+      "SESSION_COMPLETED",
+    ]),
+  },
+};
 
 function text(element, value) {
   element.textContent = value;
@@ -121,11 +154,39 @@ function renderFills(session) {
   }
 }
 
+function selectedTimelineEvents(session) {
+  const lens = auditLenses[state.timelineFilter] || auditLenses.all;
+  if (!lens.eventTypes) return session.events;
+  return session.events.filter((event) => lens.eventTypes.has(event.event_type));
+}
+
+function updateTimelineLens() {
+  document.querySelectorAll("[data-timeline-filter]").forEach((button) => {
+    const isActive = button.dataset.timelineFilter === state.timelineFilter;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
 function renderTimeline(session) {
   const timeline = byId("timeline");
+  const lens = auditLenses[state.timelineFilter] || auditLenses.all;
+  const events = selectedTimelineEvents(session);
   timeline.replaceChildren();
-  text(byId("event-count"), `${session.events.length} events`);
-  for (const event of session.events) {
+  updateTimelineLens();
+  text(byId("event-count"), lens === auditLenses.all ? `${session.events.length} events` : `${events.length} of ${session.events.length} events`);
+  text(
+    byId("timeline-filter-status"),
+    events.length ? `Showing ${events.length} ${lens.label} event${events.length === 1 ? "" : "s"}.` : `No ${lens.label} events in this session yet.`,
+  );
+  if (!events.length) {
+    const item = document.createElement("li");
+    item.className = "timeline-empty";
+    text(item, "No matching audit events yet.");
+    timeline.append(item);
+    return;
+  }
+  for (const event of events) {
     const item = document.createElement("li");
     const sequence = document.createElement("span");
     const eventType = document.createElement("span");
@@ -141,6 +202,18 @@ function renderTimeline(session) {
     item.append(sequence, eventType, reason, hash);
     timeline.append(item);
   }
+}
+
+function setTimelineFilter(filter) {
+  if (!auditLenses[filter]) return;
+  state.timelineFilter = filter;
+  updateTimelineLens();
+  if (state.session) {
+    renderTimeline(state.session);
+    return;
+  }
+  const lens = auditLenses[filter];
+  text(byId("timeline-filter-status"), `${lens.label} lens selected. Start a replay to populate audit events.`);
 }
 
 function render(session) {
@@ -231,4 +304,8 @@ async function decide(action) {
 byId("start-session").addEventListener("click", startSession);
 byId("approve").addEventListener("click", () => decide("approve"));
 byId("reject").addEventListener("click", () => decide("reject"));
+document.querySelectorAll("[data-timeline-filter]").forEach((button) => {
+  button.addEventListener("click", () => setTimelineFilter(button.dataset.timelineFilter));
+});
+updateTimelineLens();
 loadScenarios();
