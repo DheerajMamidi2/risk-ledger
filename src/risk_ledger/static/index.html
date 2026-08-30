@@ -142,7 +142,12 @@
           <section class="card" aria-labelledby="timeline-title">
             <div class="section-heading compact">
               <div><p class="eyebrow">07 · Audit</p><h2 id="timeline-title">Immutable timeline</h2></div>
-              <span id="event-count" class="count-chip">0 events</span>
+              <div class="audit-heading-actions">
+                <span id="event-count" class="count-chip">0 events</span>
+                <button id="export-audit" class="audit-export" type="button" aria-describedby="audit-export-status" disabled>
+                  Export JSON <span aria-hidden="true">↓</span>
+                </button>
+              </div>
             </div>
             <div class="timeline-lens" role="group" aria-label="Audit timeline lens">
               <button class="timeline-filter is-active" type="button" data-timeline-filter="all" aria-pressed="true">All events</button>
@@ -151,6 +156,7 @@
               <button class="timeline-filter" type="button" data-timeline-filter="execution" aria-pressed="false">Execution</button>
             </div>
             <p id="timeline-filter-status" class="sr-only" aria-live="polite">Showing all audit events.</p>
+            <p id="audit-export-status" class="sr-only" aria-live="polite">Start a replay to enable the audit export.</p>
             <ol id="timeline" class="timeline"><li class="empty-state">Start a replay to build the audit chain.</li></ol>
           </section>
         </div>

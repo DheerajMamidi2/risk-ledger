@@ -216,6 +216,41 @@ function setTimelineFilter(filter) {
   text(byId("timeline-filter-status"), `${lens.label} lens selected. Start a replay to populate audit events.`);
 }
 
+function buildAuditExport(session) {
+  return {
+    schema_version: 1,
+    session_id: session.session_id,
+    status: session.status,
+    outcome: session.outcome,
+    scenario: {
+      scenario_id: session.scenario.scenario_id,
+      name: session.scenario.name,
+      symbol: session.scenario.symbol,
+    },
+    dataset_digest: session.dataset_digest,
+    policy_digest: session.risk_decision?.policy_digest || null,
+    approval_digest: session.approval_binding?.digest || null,
+    event_count: session.events.length,
+    events: session.events,
+  };
+}
+
+function downloadAuditExport() {
+  if (!state.session) return;
+  const exportData = buildAuditExport(state.session);
+  const blob = new Blob([`${JSON.stringify(exportData, null, 2)}\n`], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const safeSessionId = String(state.session.session_id).replaceAll(/[^a-zA-Z0-9_-]/g, "-");
+  link.href = url;
+  link.download = `risk-ledger-${safeSessionId}-audit.json`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  text(byId("audit-export-status"), `Audit export downloaded with ${exportData.event_count} events.`);
+}
+
 function render(session) {
   state.session = session;
   text(byId("session-title"), session.scenario.name);
@@ -232,6 +267,8 @@ function render(session) {
   renderRisk(session);
   renderFills(session);
   renderTimeline(session);
+  byId("export-audit").disabled = false;
+  text(byId("audit-export-status"), `Audit export ready with ${session.events.length} events.`);
 
   const awaiting = session.status === "AWAITING_APPROVAL" && session.approval_binding;
   byId("approval-card").hidden = !awaiting;
@@ -304,6 +341,7 @@ async function decide(action) {
 byId("start-session").addEventListener("click", startSession);
 byId("approve").addEventListener("click", () => decide("approve"));
 byId("reject").addEventListener("click", () => decide("reject"));
+byId("export-audit").addEventListener("click", downloadAuditExport);
 document.querySelectorAll("[data-timeline-filter]").forEach((button) => {
   button.addEventListener("click", () => setTimelineFilter(button.dataset.timelineFilter));
 });

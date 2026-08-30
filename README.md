@@ -122,7 +122,7 @@ The runtime image uses Python 3.12, contains only production dependencies, and r
 2. Run **Stale price veto**. The independent risk engine emits a stable violation and the approval path remains unavailable.
 3. Run **Steady rise**. Inspect the source bar IDs cited by each signal, the proposal, risk decision, and approval digest.
 4. Reject one session to show that a human can always stop a risk-passed proposal.
-5. Start a fresh steady-rise session, approve the exact digest, and use the audit lens to inspect analysis, authority, execution, and reconciliation events in the hash-chained timeline.
+5. Start a fresh steady-rise session, approve the exact digest, use the audit lens to inspect the hash-chained timeline, and export the complete audit evidence as JSON.
 
 The same scenario and locked inputs reproduce the same domain decisions. Operational identifiers such as a new session ID may differ between runs.
 

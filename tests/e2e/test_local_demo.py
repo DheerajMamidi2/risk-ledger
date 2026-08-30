@@ -12,12 +12,17 @@ def test_recruiter_demo_page_and_full_api_journey(client, mutation_headers) -> N
     assert "financial advice" in page.text.lower()
     assert 'aria-label="Audit timeline lens"' in page.text
     assert 'data-timeline-filter="authority"' in page.text
+    assert 'id="export-audit"' in page.text
+    assert 'aria-describedby="audit-export-status"' in page.text
 
     script = client.get("/assets/app.js")
 
     assert script.status_code == 200
     assert "auditLenses" in script.text
     assert "setTimelineFilter" in script.text
+    assert "buildAuditExport" in script.text
+    assert "downloadAuditExport" in script.text
+    assert "Audit export ready" in script.text
 
     created = client.post(
         "/api/sessions",
